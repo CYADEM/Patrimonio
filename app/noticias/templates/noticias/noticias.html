@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block content %}
+
+{% if request.user.is_staff or request.user.is_superuser %}
+  <div class="text-center my-6">
+    <a href="{% url 'noticias:noticias_solicitadas' %}" class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full transition-all duration-200">
+      Ver solicitudes de noticias
+    </a>
+  </div>
+{% endif %}
+
+<h1 class="text-4xl font-bold text-center text-gray-800 my-10">📰 Últimas Noticias</h1>
+
+<div id="contenedor" class="flex flex-wrap justify-center gap-6 max-w-screen-xl mx-auto px-4">
+  {% if noticias %}
+    {% for noticia in noticias %}
+      <div class="w-full md:w-4/5 lg:w-2/3 bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 text-white">
+        {% if noticia.portada %}
+          <img src="{{ noticia.portada.url }}" alt="Imagen de portada"
+            class="w-full h-48 object-cover rounded-xl mb-4">
+        {% endif %}
+        <div class="text-xl font-semibold text-white mb-1">{{ noticia.titulo }}</div>
+        <div class="text-sm text-slate-300 mb-1">Publicado el: {{ noticia.fecha_publicacion|date:"d/m/Y H:i" }}</div>
+        <!--<p class="text-base text-slate-200 leading-relaxed">{{ noticia.contenido|truncatewords:50 }}</p>-->
+        <p class="text-white leading-relaxed noticia-contenido">{{ noticia.contenido|safe }}</p>
+
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-center text-slate-500 text-base mt-10">No hay noticias disponibles todavía.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

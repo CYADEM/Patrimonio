@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ficha Detalle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">📄 Ficha Nº {{ ficha.nro_id }}</h1>
+
+    {% if guardado_exitoso %}
+<div id="mensaje-exito" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+  <div class="bg-green-100 border-4 border-green-400 text-green-800 px-8 py-6 rounded-lg shadow-lg w-full max-w-md mx-auto text-center relative">
+    <p class="text-lg font-semibold">✔️ Ficha actualizada correctamente.</p>
+    <button onclick="cerrarMensaje()" class="absolute top-2 right-2 text-green-800 hover:text-green-900 font-bold text-xl">&times;</button>
+  </div>
+</div>
+
+<script>
+  // Redirigir después de 2.5 segundos
+  let redirTimer = setTimeout(() => {
+    window.location.href = "{% url 'fichas:lista_fichas' %}";
+  }, 2500);
+
+  // Si se cierra manualmente, cancelar redirección
+  function cerrarMensaje() {
+    clearTimeout(redirTimer);
+    document.getElementById('mensaje-exito').remove();
+  }
+</script>
+{% endif %}
+
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- BLOQUE: Identificación -->
+      <details open class="mb-6 border p-4 rounded">
+        <summary class="text-lg font-semibold mb-2 cursor-pointer">📁 Datos de Identificación</summary>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div><label class="block text-sm font-medium text-gray-700">Nº</label>{{ form.nro_id }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Nº de sigla CICPSE</label>{{ form.sigla_cicpse }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Sigla RENICOA</label>{{ form.sigla_renicoa }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Otros Nº de registro</label>{{ form.otros_nros }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Nombre de la colección</label>{{ form.nombre_coleccion }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Nombre descriptivo</label>{{ form.nombre_descriptivo }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Tipo de material</label>{{ form.tipo_material }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Año de colección</label>{{ form.anio_coleccion }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Forma de ingreso</label>{{ form.forma_ingreso }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Ubicación</label>{{ form.ubicacion }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Otros datos</label>{{ form.otros_datos }}</div>
+        </div>
+      </details>
+
+      <!-- BLOQUE: Procedencia -->
+      <details class="mb-6 border p-4 rounded">
+        <summary class="text-lg font-semibold mb-2 cursor-pointer">🌍 Datos de Procedencia</summary>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div><label class="block text-sm font-medium text-gray-700">País</label>{{ form.pais }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Provincia / Región</label>{{ form.pais_region }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Departamento</label>{{ form.departamento }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Localidad</label>{{ form.localidad }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Sitio arqueológico</label>{{ form.sitio_arqueologico }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Datos contextuales</label>{{ form.datos_contextuales }}</div>
+        </div>
+      </details>
+
+      <!-- BLOQUE: Descripción del Objeto -->
+      <details class="mb-6 border p-4 rounded">
+        <summary class="text-lg font-semibold mb-2 cursor-pointer">📦 Descripción del Objeto</summary>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div><label class="block text-sm font-medium text-gray-700">Forma</label>{{ form.forma }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Técnica</label>{{ form.tecnica }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Descripción</label>{{ form.descripcion }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Adscripción cultural / temporal</label>{{ form.adscripcion_cultural_temporal }}</div>
+        </div>
+
+        <h4 class="text-md font-semibold mt-4 mb-2">📐 Medidas (en cm.)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700">Altura / Largo</label>{{ form.altura_largo }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Ancho / Diámetro máx.</label>{{ form.ancho_diametro_maximo }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Espesor</label>{{ form.espesor }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Otras alturas</label>{{ form.otras_alturas }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Diámetro mínimo</label>{{ form.diametro_minimo }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Otras medidas</label>{{ form.otras_medidas }}</div>
+        </div>
+      </details>
+
+      <!-- BLOQUE: Estado de Conservación -->
+      <details class="mb-6 border p-4 rounded">
+        <summary class="text-lg font-semibold mb-2 cursor-pointer">🧪 Estado de Conservación</summary>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700">Estado de Conservación</label>{{ form.estado_conservacion }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Estado Estructural</label>{{ form.estado_estructural }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Estado de Superficie</label>{{ form.estado_superficie }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Deterioro Químico</label>{{ form.deterioro_quimico }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Deterioro Mecánico</label>{{ form.deterioro_mecanico }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Deterioro Biológico</label>{{ form.deterioro_biologico }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Intervenciones</label>{{ form.intervenciones }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Observaciones</label>{{ form.observaciones }}</div>
+        </div>
+      </details>
+
+      <!-- BLOQUE: Datos Adicionales -->
+      <details class="mb-6 border p-4 rounded">
+        <summary class="text-lg font-semibold mb-2 cursor-pointer">📁 Datos Adicionales</summary>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700">Intervenciones de investigación</label>{{ form.intervenciones_investigacion }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Préstamos / exposiciones</label>{{ form.prestamos_exposiciones }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Ubicaciones anteriores</label>{{ form.ubicaciones_anteriores }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Documentación asociada</label>{{ form.documentacion_asociada }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Asociación con otros lotes / objetos</label>{{ form.asociacion_otros_lotes_objetos }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Historia del objeto</label>{{ form.historia_objeto }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Otra información</label>{{ form.otra_informacion }}</div>
+        </div>
+      </details>
+
+      <!-- BLOQUE: Fotografías -->
+      <details class="mb-6 border p-4 rounded">
+        <summary class="text-lg font-semibold mb-2 cursor-pointer">🖼 Fotografías</summary>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700">Sin intervención</label>{{ form.foto_sin_intervencion }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Objeto intervenido</label>{{ form.foto_intervenido }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Rótulos / Detalles</label>{{ form.foto_rotulos }}</div>
+          <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">Otras fotografías</label>{{ form.otras_fotografias }}</div>
+        </div>
+      </details>
+
+      <!-- BLOQUE: Registro -->
+      <details class="mb-6 border p-4 rounded">
+        <summary class="text-lg font-semibold mb-2 cursor-pointer">📝 Datos del Registro</summary>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="block text-sm font-medium text-gray-700">Fecha del registro</label>{{ form.fecha_registro }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Nombre y apellido</label>{{ form.nombre_apellido }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">DNI</label>{{ form.dni }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Designación</label>{{ form.designacion }}</div>
+          <div><label class="block text-sm font-medium text-gray-700">Contacto</label>{{ form.contacto }}</div>
+        </div>
+      </details>
+
+      <div class="pt-4 flex items-center gap-4">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Guardar/Finalizar
+        </button>
+        <a href="{% url 'fichas:lista_fichas' %}" class="text-blue-600 hover:underline">
+          ← Volver al listado
+        </a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

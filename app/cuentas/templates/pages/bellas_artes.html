@@ -1,0 +1,115 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background-image: url("{% static 'img/bellasartes.jpg' %}");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .coleccion-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #d1d5db; /* gray-300 */
+  }
+
+  .coleccion-nombre {
+    white-space: nowrap;
+    overflow: visible;
+  }
+</style>
+
+<div class="min-h-screen bg-black bg-opacity-50">
+
+  <!-- Header con título -->
+  <header class="py-5 bg-red-400">
+    <div class="max-w-[90%] mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <ion-icon name="arrow-back-outline" class="text-2xl text-white"></ion-icon>
+        <a href="{% url 'cuentas:colecciones' %}" class="text-white font-semibold pb-1 border-b border-red-400 hover:border-black">Volver atrás</a>
+      </div>
+      <h3 class="text-5xl text-center text-white font-bold">Bellas Artes</h3>
+      <div></div>
+    </div>
+  </header>
+  
+
+  <!-- Buscador -->
+  <section class="py-10 flex justify-center">
+    <div class="flex items-center gap-2 bg-white py-2 px-5 w-[50%] mx-auto rounded-md shadow-md">
+      <ion-icon name="search-outline"></ion-icon>
+      <input type="text" placeholder="Buscar elemento" class="w-full outline-none">
+    </div>
+  </section>
+        <!-- Mensaje de éxito -->
+{% if messages %}
+  <div class="flex justify-center">
+    <div class="w-[80%]">
+      {% for message in messages %}
+        <div class="p-4 mb-6 rounded-lg shadow-md border-l-4 transition-all duration-300 
+                    {% if message.tags == 'success' %}
+                      bg-green-100 border-green-500 text-green-800
+                    {% elif message.tags == 'error' %}
+                      bg-red-100 border-red-500 text-red-800
+                    {% elif message.tags == 'warning' %}
+                      bg-yellow-100 border-yellow-500 text-yellow-800
+                    {% else %}
+                      bg-blue-100 border-blue-500 text-blue-800
+                    {% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+  <!-- Listado de Colecciones -->
+  <section class="pb-10 flex justify-center">
+    <div class="bg-white bg-opacity-90 rounded-xl p-6 w-[80%] shadow-lg">
+
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800">Colecciones</h2>
+        <a href="{% url 'cuentas:crear_coleccion' area='bellas_artes' %}"  
+           class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md shadow text-sm font-semibold inline-block">
+          Crear nueva colección
+        </a>
+      </div>
+
+            <ul class="text-gray-700 space-y-2">
+        {% for coleccion in colecciones %}
+          <li class="coleccion-item">
+            {% if area.nombre == 'bellas_artes' %}
+              <!-- Versión ilustrativa: solo texto, no clickeable ni con botón -->
+              <span class="text-gray-500 italic coleccion-nombre">
+                {{ coleccion.nombre }}
+              </span>
+            {% else %}
+              <!-- Versión normal -->
+              <span class="text-black font-medium coleccion-nombre">
+                {{ coleccion.nombre }}
+              </span>
+              <form method="POST" action="{% url 'cuentas:borrar_coleccion' coleccion.id %}"
+                    onsubmit="return confirm('¡Atención! Se eliminará permanentemente la colección «{{ coleccion.nombre }}».\n¿Deseás continuar?');">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-3 py-1 rounded-md shadow-sm transition-colors duration-200">
+                  Borrar
+                </button>
+              </form>
+            {% endif %}
+          </li>
+        {% empty %}
+          <li>No hay colecciones aún.</li>
+        {% endfor %}
+      </ul>
+
+
+    </div>
+  </section>
+
+</div>
+{% endblock %}

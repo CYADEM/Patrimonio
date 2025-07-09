@@ -1,0 +1,452 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+      height: 100%;
+  margin: 0;
+  padding: 0;
+  background-image: url("{% static 'img/antropologia.jpg' %}");
+  background-repeat: repeat;       /* Esto hace que la imagen se repita horizontal y verticalmente */
+  background-position: top left;   /* Opcional, para que la imagen empiece a repetirse desde arriba a la izquierda */
+  background-size: cover;            /* Así la imagen mantiene su tamaño original y se repite */
+  background-color: #f0f0f0;       /* Pone un color de fondo si la imagen no alcanza (opcional) */
+}
+  .coleccion-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #d1d5db; /* gray-300 */
+  }
+  .coleccion-nombre {
+    white-space: nowrap;
+    overflow: visible;
+  }
+</style>
+
+<div class="min-h-screen bg-black bg-opacity-50">
+
+  <!-- Header con título -->
+  <header class="py-5 bg-red-400">
+    <div class="max-w-[90%] mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <ion-icon name="arrow-back-outline" class="text-2xl text-white"></ion-icon>
+        <a href="{% url 'fichas:lista_fichas' %}" class="text-white font-semibold pb-1 border-b border-red-400 hover:border-black">Volver atrás</a>
+      </div>
+      <h3 class="text-5xl text-center text-white font-bold">Antropología</h3>
+      <div></div>
+    </div>
+  </header>
+ <!-- Botón Volver al menú (idéntico al de formulario.html) -->
+<div class="flex justify-end mb-2">
+  
+</div>
+
+
+
+
+    {% if form.errors %}
+      <div class="bg-red-100 border border-red-400 text-red-700 p-4 mb-4 rounded">
+        <h3 class="font-bold mb-2">Errores en el formulario:</h3>
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+  
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+
+      {% csrf_token %}
+
+     <!-- BLOQUE 1: Datos de Identificación -->
+<div class="w-[95%] mx-auto bg-white p-6 rounded-lg shadow mb-6">
+  <details open class="mb-6 border rounded p-4">
+    <summary class="text-lg font-semibold cursor-pointer">📄 Datos de Identificación</summary>
+
+    <div>
+      <label for="nro_id" class="block text-sm font-medium text-gray-700">N°</label>
+      <input type="number" name="nro_id" id="nro_id" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="sigla_cicpse" class="block text-sm font-medium text-gray-700">N° de sigla CICPSE</label>
+        <input type="number" name="sigla_cicpse" id="sigla_cicpse" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+      <div>
+        <label for="sigla_renicoa" class="block text-sm font-medium text-gray-700">Sigla RENICOA</label>
+        <input type="text" name="sigla_renicoa" id="sigla_renicoa" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="otros_nros" class="block text-sm font-medium text-gray-700">Otros N° de registro</label>
+        <input type="text" name="otros_nros" id="otros_nros" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+      <div>
+        <label for="nombre_coleccion" class="block text-sm font-medium text-gray-700">Nombre de la colección</label>
+        <input type="text" name="nombre_coleccion" id="nombre_coleccion" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+    </div>
+
+    <div>
+      <label for="nombre_descriptivo" class="block text-sm font-medium text-gray-700">Nombre descriptivo</label>
+      <input type="text" name="nombre_descriptivo" id="nombre_descriptivo" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="tipo_material" class="block text-sm font-medium text-gray-700">Tipo de material</label>
+        <input type="text" name="tipo_material" id="tipo_material" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+      <div>
+        <label for="anio_coleccion" class="block text-sm font-medium text-gray-700">Año de colección</label>
+        <input type="text" name="anio_coleccion" id="anio_coleccion" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="forma_ingreso" class="block text-sm font-medium text-gray-700">Forma de ingreso</label>
+        <input type="text" name="forma_ingreso" id="forma_ingreso" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+      <div>
+        <label for="ubicacion" class="block text-sm font-medium text-gray-700">Ubicación</label>
+        <input type="text" name="ubicacion" id="ubicacion" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+      </div>
+    </div>
+
+    <div>
+      <label for="otros_datos" class="block text-sm font-medium text-gray-700">Otros datos</label>
+      <textarea name="otros_datos" id="otros_datos" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+
+  </details>
+
+
+
+      <!-- BLOQUE 2: Datos de Procedencia -->
+      <details class="mb-6 border rounded p-4">
+        <summary class="text-lg font-semibold cursor-pointer">🌍 Datos de Procedencia</summary>
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="pais" class="block text-sm font-medium text-gray-700">País</label>
+            <input type="text" name="pais" id="pais" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+          <div>
+            <label for="pais_region" class="block text-sm font-medium text-gray-700">Provincia / Región</label>
+            <input type="text" name="pais_region" id="pais_region" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+          <div>
+            <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
+            <input type="text" name="departamento" id="departamento" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+          <div>
+            <label for="localidad" class="block text-sm font-medium text-gray-700">Localidad</label>
+            <input type="text" name="localidad" id="localidad" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+          <div class="md:col-span-2">
+            <label for="sitio_arqueologico" class="block text-sm font-medium text-gray-700">Sitio arqueológico</label>
+            <input type="text" name="sitio_arqueologico" id="sitio_arqueologico" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+          <div class="md:col-span-2">
+            <label for="datos_contextuales" class="block text-sm font-medium text-gray-700">Datos contextuales</label>
+            <textarea name="datos_contextuales" id="datos_contextuales" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+          </div>
+        </div>
+      </details>
+
+
+
+
+        <!-- BLOQUE 3: Descripcion del Objeto CONTROLAR-->
+         <details class="mb-6 border rounded p-4">
+  <summary class="text-lg font-semibold cursor-pointer">📦 Descripción del Objeto</summary>
+
+<!-- SUBSECCIÓN: Descripción -->
+  <h3 class="text-lg font-semibold mt-6 mb-2">Descripción</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="forma" class="block text-sm font-medium text-gray-700">Forma</label>
+      <input type="text" name="forma" id="forma" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+    <div>
+      <label for="tecnica" class="block text-sm font-medium text-gray-700">Técnica</label>
+      <input type="text" name="tecnica" id="tecnica" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+    <div class="md:col-span-2">
+      <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+      <textarea name="descripcion" id="descripcion" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+    <div class="md:col-span-2">
+      <label for="adscripcion_cultural_temporal" class="block text-sm font-medium text-gray-700">Adscripción cultural / temporal</label>
+      <input type="text" name="adscripcion_cultural_temporal" id="adscripcion_cultural_temporal" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+  </div>
+
+  <!-- SUBSECCIÓN: Medidas en cm. -->
+  <h3 class="text-lg font-semibold mt-4 mb-2">Medidas (en cm.)</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="altura_largo" class="block text-sm font-medium text-gray-700">Altura / Largo</label>
+      <input type="number" step="0.01" name="altura_largo" id="altura_largo" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+    <div>
+      <label for="ancho_diametro_maximo" class="block text-sm font-medium text-gray-700">Ancho / Diámetro máx.</label>
+      <input type="number" step="0.01" name="ancho_diametro_maximo" id="ancho_diametro_maximo" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+    <div>
+      <label for="espesor" class="block text-sm font-medium text-gray-700">Espesor</label>
+      <input type="number" step="0.01" name="espesor" id="espesor" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+    <div>
+      <label for="otras_alturas" class="block text-sm font-medium text-gray-700">Otras alturas</label>
+      <input type="number" step="0.01" name="otras_alturas" id="otras_alturas" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+    <div>
+      <label for="diametro_minimo" class="block text-sm font-medium text-gray-700">Diámetro mínimo</label>
+      <input type="number" step="0.01" name="diametro_minimo" id="diametro_minimo" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+    <div>
+      <label for="otras_medidas" class="block text-sm font-medium text-gray-700">Otras medidas</label>
+      <input type="text" name="otras_medidas" id="otras_medidas" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+    </div>
+  </div>
+</details>
+
+
+
+
+
+
+      <!-- BLOQUE 4: Datos del Registro -->
+      <details class="mb-6 border rounded p-4">
+        <summary class="text-lg font-semibold cursor-pointer">📝 Datos del Registro</summary>
+        <div class="mt-4 space-y-4">
+          <div>
+            <label for="fecha_registro" class="block text-sm font-medium text-gray-700">Fecha del registro</label>
+            <input type="date" name="fecha_registro" id="fecha_registro" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+          <div>
+            <label for="nombre_apellido" class="block text-sm font-medium text-gray-700">Nombre y apellido</label>
+            <input type="text" name="nombre_apellido" id="nombre_apellido" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="dni" class="block text-sm font-medium text-gray-700">DNI</label>
+              <input type="number" name="dni" id="dni" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            </div>
+            <div>
+              <label for="designacion" class="block text-sm font-medium text-gray-700">Designación</label>
+              <input type="text" name="designacion" id="designacion" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            </div>
+          </div>
+          <div>
+            <label for="contacto" class="block text-sm font-medium text-gray-700">Contacto</label>
+            <input type="text" name="contacto" id="contacto" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          </div>
+        </div>
+      </details>
+
+       <!-- BLOQUE 5: Estado de Conservacion -->
+        <details class="mb-6 border rounded p-4">
+  <summary class="text-lg font-semibold cursor-pointer">🧪 Estado de Conservación</summary>
+
+  <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="estado_conservacion" class="block text-sm font-medium text-gray-700">Estado de Conservación</label>
+      <select name="estado_conservacion" id="estado_conservacion" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        <option value="">Selecciona una opción</option>
+        <option value="malo">Malo</option>
+        <option value="regular">Regular</option>
+        <option value="bueno">Bueno</option>
+        <option value="muy bueno">Muy bueno</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="estado_estructural" class="block text-sm font-medium text-gray-700">Estado Estructural</label>
+      <select name="estado_estructural" id="estado_estructural" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        <option value="">Selecciona una opción</option>
+        <option value="entero">Entero</option>
+        <option value="fragmentado">Fragmentado</option>
+        <option value="completo">Completo</option>
+        <option value="incompleto">Incompleto</option>
+        <option value="rajado_agrietado">Rajado / Agrietado</option>
+        <option value="restaurado">Restaurado</option>
+        <option value="deformado">Deformado</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="estado_superficie" class="block text-sm font-medium text-gray-700">Estado de Superficie</label>
+      <select name="estado_superficie" id="estado_superficie" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        <option value="">Selecciona una opción</option>
+        <option value="sin_deterioro">Sin deterioro</option>
+        <option value="suciedad_superficial">Suciedad superficial</option>
+        <option value="depositos_foraneos">Depósitos foráneos</option>
+        <option value="desgaste">Desgaste</option>
+        <option value="perdida">Pérdida</option>
+        <option value="manchas">Manchas</option>
+      </select>
+    </div>
+  </div>
+
+  <hr class="my-6">
+
+  <h3 class="text-md font-semibold mb-2">Características del deterioro</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <label for="deterioro_quimico" class="block text-sm font-medium text-gray-700">Químico</label>
+      <select name="deterioro_quimico" id="deterioro_quimico" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        <option value="">Selecciona una opción</option>
+        <option value="sales">Sales</option>
+        <option value="oxidos_corrosion">Óxidos / Corrosión</option>
+      </select>
+    </div>
+    <div>
+      <label for="deterioro_mecanico" class="block text-sm font-medium text-gray-700">Mecánico</label>
+      <select name="deterioro_mecanico" id="deterioro_mecanico" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        <option value="">Selecciona una opción</option>
+        <option value="golpe">Golpe</option>
+        <option value="corte">Corte</option>
+      </select>
+    </div>
+    <div>
+      <label for="deterioro_biologico" class="block text-sm font-medium text-gray-700">Biológico</label>
+      <select name="deterioro_biologico" id="deterioro_biologico" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+        <option value="">Selecciona una opción</option>
+        <option value="vegetal">Vegetal</option>
+        <option value="animal">Animal</option>
+        <option value="insecto">Insecto</option>
+        <option value="moho_hongo">Moho / Hongo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="intervenciones" class="block text-sm font-medium text-gray-700">Intervenciones</label>
+      <textarea name="intervenciones" id="intervenciones" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+    <div>
+      <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
+      <textarea name="observaciones" id="observaciones" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+  </div>
+</details>
+
+
+<!-- BLOQUE 6: Datos Adicionales -->
+
+<details class="mb-6 border rounded p-4">
+  <summary class="text-lg font-semibold cursor-pointer">📁 Datos Adicionales</summary>
+
+  <div class="mt-4 space-y-4">
+
+    <div>
+      <label for="intervenciones_investigacion" class="block text-sm font-medium text-gray-700">Intervenciones de investigación</label>
+      <textarea name="intervenciones_investigacion" id="intervenciones_investigacion" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+
+    <div>
+      <label for="prestamos_exposiciones" class="block text-sm font-medium text-gray-700">Préstamos / exposiciones</label>
+      <textarea name="prestamos_exposiciones" id="prestamos_exposiciones" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+
+    <div>
+      <label for="ubicaciones_anteriores" class="block text-sm font-medium text-gray-700">Ubicaciones anteriores</label>
+      <textarea name="ubicaciones_anteriores" id="ubicaciones_anteriores" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+
+    <div>
+      <label for="documentacion_asociada" class="block text-sm font-medium text-gray-700">Documentación asociada al objeto</label>
+      <textarea name="documentacion_asociada" id="documentacion_asociada" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Etiquetas, informes, artículos..."></textarea>
+    </div>
+
+    <div>
+      <label for="asociacion_otros_lotes_objetos" class="block text-sm font-medium text-gray-700">Asociación con otros lotes / objetos</label>
+      <textarea name="asociacion_otros_lotes_objetos" id="asociacion_otros_lotes_objetos" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+
+    <div>
+      <label for="historia_objeto" class="block text-sm font-medium text-gray-700">Historia del objeto en la institución</label>
+      <textarea name="historia_objeto" id="historia_objeto" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="A quién perteneció, actas de ingreso, etc."></textarea>
+    </div>
+
+    <div>
+      <label for="otra_informacion" class="block text-sm font-medium text-gray-700">Otra información</label>
+      <textarea name="otra_informacion" id="otra_informacion" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
+    </div>
+
+  </div>
+
+</details>
+
+<!-- BLOQUE 7: Fotografias -->
+  <details class="mb-6 border rounded p-4">
+    <summary class="text-lg font-semibold cursor-pointer">📷 Fotografías</summary>
+
+    <div class="mt-4 space-y-4">
+
+      <!-- Foto sin intervención -->
+      <div>
+        <label for="foto_sin_intervencion" class="block text-sm font-medium text-gray-700">Del objeto sin intervención</label>
+        <input type="file" name="foto_sin_intervencion" id="foto_sin_intervencion"
+          accept="image/*"
+          class="mt-1 block w-full text-sm text-gray-700 file:border file:border-gray-300 file:p-2">
+      </div>
+
+      <!-- Foto intervenido -->
+      <div>
+        <label for="foto_intervenido" class="block text-sm font-medium text-gray-700">Del objeto intervenido</label>
+        <input type="file" name="foto_intervenido" id="foto_intervenido"
+          accept="image/*"
+          class="mt-1 block w-full text-sm text-gray-700 file:border file:border-gray-300 file:p-2">
+      </div>
+
+      <!-- Foto de rótulos -->
+      <div>
+        <label for="foto_rotulos" class="block text-sm font-medium text-gray-700">Rótulos / Detalles</label>
+        <input type="file" name="foto_rotulos" id="foto_rotulos"
+          accept="image/*"
+          class="mt-1 block w-full text-sm text-gray-700 file:border file:border-gray-300 file:p-2">
+      </div>
+
+      <!-- Otras fotografías -->
+      <div>
+        <label for="otras_fotografias" class="block text-sm font-medium text-gray-700">Otras fotografías</label>
+        <input type="file" name="otras_fotografias" id="otras_fotografias"
+          accept="image/*"
+          class="mt-1 block w-full text-sm text-gray-700 file:border file:border-gray-300 file:p-2">
+      </div>
+
+    </div>
+
+</details>
+
+
+
+
+
+      <!-- BOTÓN -->
+      <div class="pt-4 flex justify-center">
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    Guardar ficha
+  </button>
+</div>
+
+    </form>
+  </div>
+</div>  
+</body>
+</html>
+{% endblock %}

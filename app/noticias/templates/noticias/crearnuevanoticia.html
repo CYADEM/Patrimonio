@@ -1,0 +1,122 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load form_tags %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto bg-gray-800 p-6 rounded-xl shadow-lg my-10">
+  <h1 class="text-3xl font-bold text-center mb-8 text-white flex items-center justify-center gap-3">
+    <ion-icon name="newspaper-outline" class="text-3xl text-green-400"></ion-icon>
+    Publicar Nueva Noticia
+  </h1>
+
+  <form method="post" enctype="multipart/form-data" class="flex flex-col gap-6 w-full">
+    {% csrf_token %}
+
+    <!-- Título -->
+    <div class="w-full">
+      {{ form.titulo.errors }}
+      {{ form.titulo|add_class:"w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-green-500" }}
+    </div>
+
+    <!-- Imagen con drag & drop -->
+    <div class="w-full">
+      {{ form.portada.errors }}
+      <div id="drop-area"
+        class="w-full border-2 border-dashed border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-green-500 bg-gray-700 relative transition-all duration-300">
+        <p class="text-white mb-2">
+          <ion-icon name="cloud-upload-outline" class="text-2xl mr-2 align-middle"></ion-icon>
+          Arrastra una imagen aquí o haz clic para seleccionarla
+        </p>
+        {{ form.portada|add_class:"hidden" }}
+        <img id="preview" class="w-full mt-4 rounded-lg hidden" />
+      </div>
+    </div>
+
+    <!-- Contenido con Quill -->
+    <div class="w-full">
+      <div id="editor-container" class="w-full p-3 rounded-lg bg-white border border-gray-600 focus:ring-2 focus:ring-green-500">
+        <!-- Quill editor will be initialized here -->
+      </div>
+      <input type="hidden" id="contenido" name="contenido" value="{{ form.contenido.value }}" />
+      {{ form.contenido.errors }}
+    </div>
+
+    <!-- Botón -->
+    <button type="submit"
+      class="w-full bg-green-500 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-green-600 transition-colors">
+      <ion-icon name="send-outline" class="text-xl"></ion-icon>
+      Publicar Noticia
+    </button>
+  </form>
+</div>
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+<script>
+  const dropArea = document.getElementById("drop-area");
+  const inputFile = document.querySelector("input[type='file']");
+  const preview = document.getElementById("preview");
+
+  dropArea.addEventListener("click", () => inputFile.click());
+
+  dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.classList.add("border-green-500", "bg-gray-600");
+  });
+
+  dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("border-green-500", "bg-gray-600");
+  });
+
+  dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.classList.remove("border-green-500", "bg-gray-600");
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      inputFile.files = files;
+      showPreview(files[0]);
+    }
+  });
+
+  inputFile.addEventListener("change", () => {
+    if (inputFile.files.length > 0) {
+      showPreview(inputFile.files[0]);
+    }
+  });
+
+  function showPreview(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      preview.src = e.target.result;
+      preview.classList.remove("hidden");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Initialize Quill editor
+  const quill = new Quill('#editor-container', {
+    theme: 'snow',
+    placeholder: 'Escribe el contenido de la noticia...',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'header': [1, 2, 3, false] }],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['link', 'image', 'video'],
+        ['blockquote', 'code-block'],
+        ['clean']
+      ]
+    }
+  });
+
+  // Update hidden input field with Quill content
+  const form = document.querySelector("form");
+  form.addEventListener("submit", function (e) {
+    const contenido = document.getElementById("contenido");
+    contenido.value = quill.root.innerHTML;
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,335 @@
+{% extends "layouts/base.html" %}
+{% load extra_filters %}
+
+{% block content %}
+
+
+{% if messages %}
+  <div class="max-w-7xl mx-auto px-6 mt-4">
+    {% for message in messages %}
+      <div class="p-3 rounded mb-2
+        {% if message.tags == 'error' %}bg-red-200 text-red-800
+        {% elif message.tags == 'success' %}bg-green-200 text-green-800
+        {% else %}bg-gray-200 text-gray-800{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="max-w-full mx-auto p-6">
+  
+  <section class="bg-white rounded-2xl shadow-lg p-6">
+
+    <div class="flex justify-between items-start mb-6">
+      <div class="flex items-center mb-4">
+  <a href="{% url 'cuentas:historia' %}" class="flex items-center text-blue-600 font-semibold hover:underline">
+    <ion-icon name="arrow-back-outline" class="text-xl mr-1"></ion-icon>
+    Volver
+  </a>
+</div>
+
+      
+  <h2 class="text-2xl font-bold text-gray-800">{{ coleccion.nombre }}</h2>
+  
+
+
+  <div class="flex gap-2">
+    <!-- Botón Importar Excel -->
+    <form method="POST" enctype="multipart/form-data" id="importForm" class="m-0 p-0">
+      {% csrf_token %}
+      <input type="file" name="archivo_excel" id="archivo_excel" accept=".xls,.xlsx" class="hidden" onchange="document.getElementById('importForm').submit()">
+      <button type="button" onclick="document.getElementById('archivo_excel').click()"
+              class="bg-blue-600 text-white px-4 py-1.5 text-sm rounded hover:bg-blue-700 min-w-[140px]">
+        Importar Excel
+      </button>
+    </form>
+
+    <!-- Botón Guardar cambios -->
+    <form method="POST" id="editTableForm" class="m-0 p-0">
+      {% csrf_token %}
+      <button type="submit" name="guardar" value="1"
+              class="bg-green-600 text-white px-4 py-1.5 text-sm rounded hover:bg-green-700 min-w-[140px]">
+        Guardar cambios
+      </button>
+    </form>
+  </div>
+</div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300 text-sm text-gray-700" id="data-table">
+        <thead class="bg-gray-100">
+          <tr>
+            {% if user.is_authenticated %}
+              <th class="border px-4 py-2 text-center">Privacidad</th>
+            {% endif %}
+            {% if columnas_excel %}
+              {% for col in columnas_excel %}
+                <th class="border px-4 py-2 text-left">{{ col }}</th>
+              {% endfor %}
+            {% else %}
+              {% for campo in campos %}
+                <th class="border px-4 py-2 text-left">{{ campo.nombre }}</th>
+              {% endfor %}
+            {% endif %}
+            {% if user.is_authenticated %}
+              <th class="border px-4 py-2 text-center" title="Borrar Ítem">Borrar</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% if items_excel %}
+            {% for item in items_excel %}
+              <tr class="hover:bg-gray-50" data-item-id="{{ forloop.counter }}">
+                {% if user.is_authenticated %}
+                  <td class="border px-4 py-2 text-center">🔓</td>
+                {% endif %}
+                {% for col in columnas_excel %}
+                  <td class="border px-4 py-2">
+                    {% if editable %}
+                      <input type="text" name="data-{{ forloop.parentloop.counter }}-{{ col }}" value="{{ item|get_item:col }}" class="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    {% else %}
+                      {{ item|get_item:col }}
+                    {% endif %}
+                  </td>
+                {% endfor %}
+                {% if user.is_authenticated %}
+                  <td class="border px-4 py-2 text-center"> <!-- columna vacía en Excel, sin borrar --> </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          {% elif items_db %}
+            {% for item in items_db %}
+              <tr class="hover:bg-gray-50" data-item-id="{{ item.id }}">
+                {% if user.is_authenticated %}
+                  <td class="border px-4 py-2 text-center">
+                    <button class="toggle-candado" data-item-id="{{ item.id }}" title="Cambiar privacidad">
+                      {% if item.privado %} 🔒 {% else %} 🔓 {% endif %}
+                    </button>
+                  </td>
+                {% endif %}
+                {% for campo in campos %}
+                  <td class="border px-4 py-2 editable-cell" data-campo="{{ campo.nombre }}" ondblclick="makeEditable(this)">
+                    {{ item.datos|get_item:campo.nombre }}
+                  </td>
+                {% endfor %}
+                {% if user.is_authenticated %}
+                  <td class="border px-4 py-2 text-center">
+                    <form method="POST" class="inline-block m-0 p-0" onsubmit="return confirm('¿Querés borrar este ítem?');">
+                      {% csrf_token %}
+                      <input type="hidden" name="borrar_item_id" value="{{ item.id }}">
+                      <button type="submit" class="text-red-600 hover:text-red-800" title="Borrar ítem" style="font-size: 1.3rem; line-height: 1;">
+                        &times;
+                      </button>
+                    </form>
+                  </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          {% endif %}
+          <script>
+            function makeEditable(td) {
+              if (td.querySelector('input')) return;
+
+              const originalText = td.textContent.trim();
+              const campo = td.dataset.campo;
+
+              const input = document.createElement('input');
+              input.type = 'text';
+              input.value = originalText;
+              input.className = 'w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400';
+
+              td.textContent = '';
+              td.appendChild(input);
+              input.focus();
+
+              function save() {
+                const newValue = input.value.trim();
+                td.removeChild(input);
+                td.textContent = newValue === '' ? originalText : newValue;
+              }
+
+              input.addEventListener('blur', save);
+              input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  save();
+                  td.focus();
+                }
+                if (e.key === 'Escape') {
+                  td.removeChild(input);
+                  td.textContent = originalText;
+                }
+              });
+            }
+
+            document.getElementById('editTableForm').addEventListener('submit', function(e) {
+              const form = this;
+
+              form.querySelectorAll('input[name^="data-"]').forEach(i => i.remove());
+
+              document.querySelectorAll('#data-table tbody tr').forEach(tr => {
+                const itemId = tr.dataset.itemId;
+                tr.querySelectorAll('.editable-cell').forEach(td => {
+                  const campo = td.dataset.campo;
+                  const valor = td.textContent.trim();
+
+                  const input = document.createElement('input');
+                  input.type = 'hidden';
+                  input.name = `data-${itemId}-${campo}`;
+                  input.value = valor;
+
+                  form.appendChild(input);
+                });
+              });
+            });
+          </script>
+        </tbody>
+
+        <form method="POST" class="bg-gray-50">
+          {% csrf_token %}
+          <tr class="hover:bg-green-50">
+            {% if user.is_authenticated %}
+              <td class="border px-4 py-2 text-center">🔓</td>
+            {% endif %}
+            {% for campo in campos %}
+              <td class="border px-4 py-2">
+                <input type="text" name="nuevo_{{ campo.nombre }}" placeholder="Nuevo {{ campo.nombre }}" class="w-full p-1 border rounded focus:outline-none focus:ring-2 focus:ring-green-400">
+              </td>
+            {% endfor %}
+            {% if user.is_authenticated %}
+              <td class="border px-4 py-2"></td>
+            {% endif %}
+          </tr>
+          <tr>
+            <td colspan="{{ campos|length|default:0|add:user.is_authenticated|yesno:'2,1' }}" class="text-right border-t p-3">
+              <button type="submit" name="guardar_items" value="1" class="bg-green-600 text-white text-sm px-3 py-1 rounded hover:bg-green-700 whitespace-nowrap">
+                 Guardar item nuevo
+              </button>
+
+            </td>
+          </tr>
+        </form>
+
+      </table>
+      
+    <div class="flex justify-center mt-6">
+  <div class="inline-flex flex-wrap gap-2 pagination">
+    {% if items_db.has_previous %}
+      <a href="?page=1">&laquo; Primero</a>
+      <a href="?page={{ items_db.previous_page_number }}">&lsaquo; Anterior</a>
+    {% else %}
+      <span class="disabled">&laquo; Primero</span>
+      <span class="disabled">&lsaquo; Anterior</span>
+    {% endif %}
+
+    <span class="current">
+      Página {{ items_db.number }} de {{ items_db.paginator.num_pages }}
+    </span>
+
+    {% if items_db.has_next %}
+      <a href="?page={{ items_db.next_page_number }}">Siguiente &rsaquo;</a>
+      <a href="?page={{ items_db.paginator.num_pages }}">Última &raquo;</a>
+    {% else %}
+      <span class="disabled">Siguiente &rsaquo;</span>
+      <span class="disabled">Última &raquo;</span>
+    {% endif %}
+  </div>
+</div>
+
+
+<style>
+.pagination {
+  margin: 20px 0;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.pagination a, .pagination span {
+  display: inline-block;
+  margin: 0 6px;
+  padding: 8px 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: #007bff;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pagination a:hover {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination .current {
+  font-weight: 700;
+  color: #333;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+  cursor: default;
+}
+
+.pagination .disabled {
+  color: #bbb;
+  border: 1px solid transparent;
+  cursor: not-allowed;
+}
+</style>
+    
+
+  </section>
+  
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  document.querySelectorAll('.toggle-candado').forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      const itemId = this.dataset.itemId;
+      const btn = this;
+      btn.disabled = true;
+
+      fetch("{% url 'cuentas:toggle_privacidad_ajax' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({item_id: itemId})
+      })
+      .then(response => response.json())
+      .then(data => {
+        btn.textContent = data.privado ? '🔒' : '🔓';
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('No se pudo cambiar el estado privado');
+      })
+      .finally(() => {
+        btn.disabled = false;
+      });
+    });
+  });
+});
+</script>
+
+{% endblock %}

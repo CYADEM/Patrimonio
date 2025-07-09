@@ -1,0 +1,120 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background-image: url("{% static 'img/antropologia.jpg' %}");
+    background-size: cover;
+    background-position: center;
+  }
+  .coleccion-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #d1d5db; /* gray-300 */
+  }
+  .coleccion-nombre {
+    white-space: nowrap;
+    overflow: visible;
+  }
+</style>
+
+<div class="min-h-screen bg-black bg-opacity-50">
+
+  <!-- Header con título -->
+  <header class="py-5 bg-red-400">
+    <div class="max-w-[90%] mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <ion-icon name="arrow-back-outline" class="text-2xl text-white"></ion-icon>
+        <a href="{% url 'cuentas:colecciones' %}" class="text-white font-semibold pb-1 border-b border-red-400 hover:border-black">Volver atrás</a>
+      </div>
+      <h3 class="text-5xl text-center text-white font-bold">Antropología</h3>
+      <div></div>
+    </div>
+  </header>
+
+  <!-- Contenedor principal centrado y con estilo -->
+<div class="max-w-6xl mx-auto bg-white bg-opacity-90 p-6 mt-6 rounded-lg shadow-lg">
+
+ 
+
+  <!-- Encabezado -->
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">📋 Listado de Fichas Registradas</h1>
+    <a href="{% url 'fichas:cargar_ficha' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">➕ Nueva Ficha</a>
+  </div>
+
+  <!-- Formulario de eliminación -->
+  <form id="formEliminar" method="POST" action="{% url 'fichas:eliminar_fichas' %}">
+    {% csrf_token %}
+      <div class="w-[95%] mx-auto overflow-x-auto">
+      <table class="w-full bg-white border border-gray-300 shadow-sm rounded">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2 border text-center"><input type="checkbox" id="checkAll"></th>
+            <th class="p-2 border">N°</th>
+            <th class="p-2 border">Nombre</th>
+            <th class="p-2 border">Fecha</th>
+            <th class="p-2 border">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ficha in fichas %}
+            <tr class="hover:bg-gray-50">
+              <td class="p-2 border text-center">
+                <input type="checkbox" name="fichas_seleccionadas" value="{{ ficha.id }}" class="checkboxFicha">
+              </td>
+              <td class="p-2 border">{{ ficha.nro_id }}</td>
+              <td class="p-2 border">{{ ficha.nombre_descriptivo }}</td>
+              <td class="p-2 border">{{ ficha.fecha_registro }}</td>
+              <td class="p-2 border">
+                <a href="{% url 'fichas:ficha_detalle' ficha.id %}" class="text-blue-600 hover:underline">Ver / Editar</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botón de eliminar -->
+    <div class="flex justify-end mt-4">
+      <button type="button" id="btnEliminar" class="bg-red-500 text-white px-4 py-2 rounded opacity-50 cursor-not-allowed" disabled>
+        🗑️ Eliminar seleccionados
+      </button>
+    </div>
+  </form>
+
+</div> <!-- Cierre del contenedor estilizado -->
+
+<script>
+  const checkAll = document.getElementById('checkAll');
+  const checkboxes = document.querySelectorAll('.checkboxFicha');
+  const btnEliminar = document.getElementById('btnEliminar');
+  const modal = document.getElementById('modalConfirmacion');
+  const btnCancelar = document.getElementById('btnCancelar');
+
+  checkAll.addEventListener('change', () => {
+    checkboxes.forEach(cb => cb.checked = checkAll.checked);
+    toggleBoton();
+  });
+
+  checkboxes.forEach(cb => cb.addEventListener('change', toggleBoton));
+
+  function toggleBoton() {
+    const haySeleccion = [...checkboxes].some(cb => cb.checked);
+    btnEliminar.disabled = !haySeleccion;
+    btnEliminar.classList.toggle('opacity-50', !haySeleccion);
+    btnEliminar.classList.toggle('cursor-not-allowed', !haySeleccion);
+  }
+
+  btnEliminar.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+  });
+
+  btnCancelar.addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+</script>
+{% endblock %}

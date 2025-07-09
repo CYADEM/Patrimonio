@@ -1,0 +1,268 @@
+.menu {
+    background: linear-gradient(0deg, rgba(34,193,195,0) 0%, rgba(189,189,189,1) 41%, rgba(189,189,189,1) 62%, rgba(189,189,189,0) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+/* Ajustar el cuerpo y la estructura general */
+html, body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* Ajustar la barra de navegación */
+.navbar-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Ajuste del contenedor navbar-end */
+.navbar-end {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Ajuste del enlace "Salir" */
+.navbar-item {
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Ajuste responsivo */
+@media (min-width: 768px) {
+    .navbar-menu {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .navbar-end {
+        justify-content: flex-end;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .navbar-menu {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar-item a {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+.notification-bell {
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/* Centrar el contenido en main */
+main {
+    flex-grow: 1; /* Asegura que el contenido empuje el footer hacia abajo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+input {
+    width: 80%;
+    max-width: 400px;
+}
+
+
+
+/* Botón de inicio de sesión */
+#loginBtn {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; 
+    width: 200px;
+    height: 50px;
+    background-image: url("/static/img/bandera.jpg");
+    background-size: cover;
+    background-position: center;
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: x-small;
+    text-transform: uppercase;
+    border-radius: 8px;
+    text-align: center;
+    padding-bottom: 1px; /* Ajuste fino para el texto */
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    border: none;
+}
+
+/* Efecto al pasar el mouse */
+#loginBtn:hover {
+    opacity: 0.8; /* Reduce la opacidad al pasar el cursor */
+}
+
+#registerBtn {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; 
+    width: 200px;
+    height: 50px;
+    background-image: url("/static/img/bandera.jpg");
+    background-size: cover;
+    background-position: center;
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: x-small;
+    text-transform: uppercase;
+    border-radius: 8px;
+    text-align: center;
+    padding-bottom: 1px; /* Ajuste fino para el texto */
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    border: none;
+}
+
+/* Efecto al pasar el mouse */
+#regiterBtn:hover {
+    opacity: 0.8; /* Reduce la opacidad al pasar el cursor */
+}
+
+.btn-custom {
+    width: 100px; /* Ajusta según sea necesario */
+    padding: 8px 12px;
+}
+
+
+/* Estilos del footer para que se mueva con el contenido */
+footer {
+    position: relative;
+    width: 100%;
+    background-color: #f3f4f6;
+    padding: 15px;
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+    justify-content: space-between; /* Separa el texto y las imágenes */
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: auto;
+}
+
+/* Ajustes del texto */
+footer p {
+    font-size: 14px;
+    color: #4b5563;
+    font-weight: bold;
+    margin-left: 20px; /* Asegura que el texto esté alineado a la izquierda */
+}
+
+/* Contenedor de imágenes para que queden alineadas */
+.footer-images {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Ajuste de tamaño de imágenes */
+footer img {
+    width: 120px;
+    height: 30px;
+    object-fit: contain;
+}
+
+/* Ajuste responsive para pantallas más grandes */
+@media (min-width: 540px) {
+    footer img {
+        width: 120px;
+        height: 30px;
+        object-fit: contain;
+    }
+}
+
+/* estilos para el listado de usuarios*/
+.user-card {
+    border-radius: 10px;
+    background: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-admit {
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-admit:hover {
+    background: linear-gradient(45deg, #388E3C, #689F38);
+    transform: scale(1.1);
+}
+/* news */
+.menu-opciones {
+    display: none;
+    position: absolute;
+    background-color: #2d3748;
+    width: 130px;
+    border-radius: 6px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.menu-opciones button {
+    width: 100%;
+    padding: 8px;
+    text-align: left;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-opciones button:hover {
+    background-color: #4a5568;
+}
