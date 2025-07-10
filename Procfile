@@ -1,1 +1,1 @@
-web: gunicorn patrimonio.wsgi
+web: gunicorn app.wsgi
