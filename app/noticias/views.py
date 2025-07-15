@@ -6,6 +6,17 @@ from .models import Noticia
 
 app_name = "noticias"
 
+def vista_admin(request):
+    # Contamos cuántas noticias están solicitadas
+    solicitud_count = Noticia.objects.filter(aprobada=False).count()
+
+    # Pasamos la cantidad de solicitudes al contexto
+    context = {
+        'solicitud_count': solicitud_count,
+    }
+
+    return render(request, 'base.html', context)
+
 def crear_noticia(request):
     if request.method == 'POST':
         form = NoticiaForm(request.POST, request.FILES)

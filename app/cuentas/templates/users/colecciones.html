@@ -1,43 +1,70 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
-  <div
-    class="min-h-screen bg-cover bg-center bg-no-repeat"
-    style="background-image: url('{% static 'img/bandera1.jpg' %}')"
-  >
+<div class="min-h-screen bg-gradient-to-b from-red-100 to-white">
 
-    <!-- Header con título -->
-    <header class="py-5 bg-red-400 bg-opacity-100">
-      <div class="max-w-[90%] mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <!-- Podés poner algo acá si querés -->
-        </div>
-        <h3 class="text-5xl text-center text-white font-bold">Colecciones</h3>
-        <div></div>
-      </div>
-    </header>
+  <!-- Encabezado sin fondo de color -->
+  <header class="w-full py-10">
+    <h1 class="text-4xl md:text-5xl font-bold text-center text-red-700 tracking-wide flex justify-center items-center gap-2">
+      <ion-icon name="albums-outline" class="text-5xl"></ion-icon>
+      Colecciones
+    </h1>
+  </header>
 
-    <section class="max-w-[80%] mx-auto bg-red bg-opacity-90 p-8 rounded-md mt-6">
-      <div class="py-4 flex flex-col md:flex-row justify-between">
-        <div class="flex flex-col gap-3">
-          <img src="{% static 'img/BellasArtes.jpg' %}" alt="Bellas Artes" class="w-[300px] h-[300px] rounded-md border-4 border-black">
-          <a href="/bellas_artes/" class="mx-auto py-1 px-5 bg-red-500 hover:bg-red-600 text-xl font-semibold rounded-md text-white">
+  <!-- Sección de Colecciones -->
+  <section class="w-full px-4 md:px-10 lg:px-20 py-10">
+    <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+
+      <!-- Tarjeta: Bellas Artes -->
+      <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <img src="{% static 'img/BellasArtes.jpg' %}" alt="Bellas Artes" class="w-full h-60 object-cover rounded-t-2xl">
+        <div class="p-6 text-center">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4 flex justify-center items-center gap-2">
+            <ion-icon name="color-palette-outline" class="text-2xl text-red-600"></ion-icon>
             Bellas Artes
-          </a>
-        </div>
-        <div class="flex flex-col gap-3">
-          <img src="{% static 'img/antropologia.jpg' %}" alt="Antropología" class="w-[300px] h-[300px] rounded-md border-4 border-black">
-          <a href="{% url 'fichas:lista_fichas' %}" class="mx-auto py-1 px-5 bg-red-500 hover:bg-red-600 text-xl font-semibold rounded-md text-white">
-            Antropología
-          </a>
-        </div>
-        <div class="flex flex-col gap-3">
-          <img src="{% static 'img/historia.jpg' %}" alt="Historia" class="w-[300px] h-[300px] rounded-md border-4 border-black">
-          <a href="/historia/" class="mx-auto py-1 px-5 bg-red-500 hover:bg-red-600 text-xl font-semibold rounded-md text-white">
-            Historia
+          </h2>
+          <a href="/bellas_artes/" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-md transition-all">
+            <ion-icon name="eye-outline"></ion-icon>
+            Ver más
           </a>
         </div>
       </div>
-    </section>
-  </div>
+
+      <!-- Tarjeta: Antropología -->
+      <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <img src="{% static 'img/antropologia.jpg' %}" alt="Antropología" class="w-full h-60 object-cover rounded-t-2xl">
+        <div class="p-6 text-center">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4 flex justify-center items-center gap-2">
+            <ion-icon name="people-circle-outline" class="text-2xl text-red-600"></ion-icon>
+            Antropología
+          </h2>
+          <a href="{% url 'fichas:lista_fichas' %}" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-md transition-all">
+            <ion-icon name="eye-outline"></ion-icon>
+            Ver más
+          </a>
+        </div>
+      </div>
+
+      <!-- Tarjeta: Historia -->
+      <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+        <img src="{% static 'img/historia.jpg' %}" alt="Historia" class="w-full h-60 object-cover rounded-t-2xl">
+        <div class="p-6 text-center">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4 flex justify-center items-center gap-2">
+            <ion-icon name="book-outline" class="text-2xl text-red-600"></ion-icon>
+            Historia
+          </h2>
+          <a href="/historia/" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-md transition-all">
+            <ion-icon name="eye-outline"></ion-icon>
+            Ver más
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- Ionicons CDN -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 {% endblock %}
