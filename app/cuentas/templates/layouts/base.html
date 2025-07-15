@@ -50,12 +50,14 @@
       {% endif %}
     </div>
 
-    <!-- Botón salir -->
+    <!-- Botón salir con ícono -->
     <div class="hidden md:block">
-      <a href="{% url 'cuentas:home' %}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200 font-semibold">
+      <a href="{% url 'cuentas:home' %}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-200 font-semibold flex items-center gap-2">
+        <ion-icon name="log-out-outline" class="text-xl"></ion-icon>
         Salir
       </a>
     </div>
+
   </div>
 
   <!-- Menú móvil -->
