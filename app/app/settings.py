@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-mbpinb53*swl7ke=**2@e_w(xl!&#!*nsmgk13v97tcm&5c)ii
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.onrender.com', '103.195.101.167', '127.0.0.1', 'teamdev.site']
+ALLOWED_HOSTS = ['.onrender.com', '103.195.101.167', '127.0.0.1', 'teamdev.site', 'www.teamdev.site']
 
 
 # Application definition
@@ -109,8 +109,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
