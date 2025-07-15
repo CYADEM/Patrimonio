@@ -110,9 +110,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Configura la ruta correcta para los archivos estáticos de tu proyecto
 STATICFILES_DIRS = [
-    BASE_DIR / 'app/static',  # Verifica que esta ruta sea correcta
+    BASE_DIR / 'app/static',  # Debe ser /app/static, no /app/app/static
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Carpeta donde se recopilan los archivos estáticos
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
