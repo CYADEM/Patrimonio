@@ -113,7 +113,7 @@ STATIC_URL = '/static/'
 
 # Configura la ruta correcta para los archivos estáticos de tu proyecto
 STATICFILES_DIRS = [
-    BASE_DIR / 'app/static',  # Debe ser /app/static, no /app/app/static
+    BASE_DIR / '/app/static',  # Debe ser /app/static, no /app/app/static
 ]
 
 STATIC_ROOT = BASE_DIR / 'static'  # Carpeta donde se recopilan los archivos estáticos
