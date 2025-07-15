@@ -26,11 +26,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app.cuentas',
-    'app.fichas',
-    'app.noticias',
-    'app.noticias_portadas',
-    'app.portadas',
+    'cuentas',
+    'fichas',
+    'noticias',
+    'noticias_portadas',
+    'portadas',
     
 ]
 
