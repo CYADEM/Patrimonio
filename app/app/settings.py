@@ -116,7 +116,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'app/static',  # Debe ser /app/static, no /app/app/static
 ]
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Carpeta donde se recopilan los archivos estáticos
+STATIC_ROOT = BASE_DIR / 'static'  # Carpeta donde se recopilan los archivos estáticos
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
