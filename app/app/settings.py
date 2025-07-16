@@ -110,8 +110,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Carpeta donde están tus archivos js, css, img, etc.
-STATIC_ROOT = BASE_DIR / 'staticfiles'    # Carpeta donde se copian al hacer collectstatic
+STATICFILES_DIRS = [
+    BASE_DIR / 'app/static',  # Asegúrate de que esta carpeta exista
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
