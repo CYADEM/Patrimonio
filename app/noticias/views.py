@@ -58,6 +58,12 @@ def eliminar_noticia(request, id):
     noticias = Noticia.objects.filter(aprobada=False).order_by('-fecha_publicacion')
     return render(request, 'noticias/solicitudes.html', {'noticias': noticias})  # O donde quieras redirigir
 
+def eliminarfinal_noticia(request, id):
+    noticia = get_object_or_404(Noticia, id=id)
+    noticia.delete()
+    noticias = Noticia.objects.filter(aprobada=True).order_by('-fecha_publicacion')
+    return render(request, 'noticias/noticias.html', {'noticias': noticias})  # O donde quieras redirigir
+
 def editar_noticia(request, id):
     # Podés hacer un formulario más adelante
     return redirect('noticias_solicitadas')

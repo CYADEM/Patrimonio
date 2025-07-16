@@ -12,7 +12,8 @@ urlpatterns = [
     path('aprobar/<int:id>/', views.aprobar_noticia, name='aprobar_noticia'),
     path('rechazar/<int:id>/', views.rechazar_noticia, name='rechazar_noticia'),
     path('editar/<int:id>/', views.editar_noticia, name='editar_noticia'),
-    path('eliminar/<int:id>/', views.eliminar_noticia, name='eliminar_noticia')
+    path('eliminar/<int:id>/', views.eliminar_noticia, name='eliminar_noticia'),
+    path('eliminarfinal/<int:id>', views.eliminarfinal_noticia, name='eliminarfinal_noticia')
 
     # Agrega más rutas aquí si es necesario
 ]

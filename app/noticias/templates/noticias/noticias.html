@@ -2,34 +2,96 @@
 {% load static %}
 {% block content %}
 
-{% if request.user.is_staff or request.user.is_superuser %}
-  <div class="text-center my-6">
-    <a href="{% url 'noticias:noticias_solicitadas' %}" class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full transition-all duration-200">
-      Ver solicitudes de noticias
-    </a>
-  </div>
-{% endif %}
+<!-- CDN de SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <h1 class="text-4xl font-bold text-center text-gray-800 my-10">📰 Últimas Noticias</h1>
 
-<div id="contenedor" class="bg-red-500 flex flex-wrap justify-center gap-6 max-w-screen-xl mx-auto px-4">
+<div id="contenedor" class="flex flex-wrap justify-center gap-6 max-w-screen-xl mx-auto px-4">
   {% if noticias %}
     {% for noticia in noticias %}
-      <div class="w-full md:w-4/5 lg:w-2/3 bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 text-white">
-        {% if noticia.portada %}
-          <img src="{{ noticia.portada.url }}" alt="Imagen de portada"
-            class="w-full h-48 object-cover rounded-xl mb-4">
-        {% endif %}
-        <div class="text-xl font-semibold text-white mb-1">{{ noticia.titulo }}</div>
-        <div class="text-sm text-slate-300 mb-1">Publicado el: {{ noticia.fecha_publicacion|date:"d/m/Y H:i" }}</div>
-        <!--<p class="text-base text-slate-200 leading-relaxed">{{ noticia.contenido|truncatewords:50 }}</p>-->
-        <p class="text-white leading-relaxed noticia-contenido">{{ noticia.contenido|safe }}</p>
+      {% if noticia.id %}
+          <div class="w-full md:w-4/5 lg:w-2/3 bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 text-white relative group">
 
-      </div>
+            {% if noticia.portada %}
+              {% if request.user.is_staff or request.user.is_superuser %}
+                <div class="absolute top-4 right-4 z-10">
+                  <button onclick="toggleMenu('menu-{{ noticia.id }}')" class="text-white hover:text-gray-300 text-2xl focus:outline-none">
+                    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                  </button>
+                  <div id="menu-{{ noticia.id }}" class="hidden absolute right-0 mt-2 w-44 bg-white text-gray-800 rounded shadow-lg py-2 text-sm z-20">
+                    <a href="" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                      <ion-icon name="create-outline" class="text-base"></ion-icon> Editar
+                    </a>
+                    <a href="" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100">
+                      <ion-icon name="eye-off-outline" class="text-base"></ion-icon> Ocultar
+                    </a>
+                    <form method="POST" action="{% url 'noticias:eliminarfinal_noticia' noticia.id %}" class="delete-form">
+                      {% csrf_token %}
+                      <button type="button" class="w-full text-left flex items-center gap-2 px-4 py-2 hover:bg-red-100 text-red-600 swal-delete-btn">
+                        <ion-icon name="trash-outline" class="text-base"></ion-icon> Eliminar
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              {% endif %}
+              <img src="{{ noticia.portada.url }}" alt="Imagen de portada"
+                class="w-full h-48 object-cover rounded-xl mb-4">
+            {% endif %}
+
+            <div class="text-xl font-semibold text-white mb-1">{{ noticia.titulo }}</div>
+            <div class="text-sm text-slate-300 mb-6">{{ noticia.fecha_publicacion|date:"d/m/Y H:i" }}</div>
+            <p class="text-white leading-relaxed noticia-contenido mb-4">{{ noticia.contenido|safe }}</p>
+
+          </div>
+      {% endif %}
     {% endfor %}
   {% else %}
     <p class="text-center text-slate-500 text-base mt-10">No hay noticias disponibles todavía.</p>
   {% endif %}
 </div>
+
+<!-- Scripts -->
+<script>
+  function toggleMenu(id) {
+    document.querySelectorAll('[id^="menu-"]').forEach(menu => {
+      if (menu.id === id) {
+        menu.classList.toggle('hidden');
+      } else {
+        menu.classList.add('hidden');
+      }
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    const isMenuButton = e.target.closest('button');
+    const isMenu = e.target.closest('[id^="menu-"]');
+    if (!isMenuButton && !isMenu) {
+      document.querySelectorAll('[id^="menu-"]').forEach(menu => menu.classList.add('hidden'));
+    }
+  });
+
+  // Confirmación con SweetAlert2
+  document.querySelectorAll('.swal-delete-btn').forEach(button => {
+    button.addEventListener('click', function (e) {
+      const form = this.closest('form');
+
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta noticia se eliminará permanentemente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit();
+        }
+      });
+    });
+  });
+</script>
 
 {% endblock %}
