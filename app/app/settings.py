@@ -111,7 +111,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'app/static',  # Asegúrate de que esta carpeta exista
+    BASE_DIR / 'app/staticfiles',  # Asegúrate de que esta carpeta exista
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
