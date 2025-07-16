@@ -147,7 +147,7 @@ input {
     align-items: flex-end; 
     width: 200px;
     height: 50px;
-    background-image: url("/staticfiles/img/bandera.jpg");
+    background-image: url("/staticfiles/img/bandera.jpge");
     background-size: cover;
     background-position: center;
     color: whitesmoke;
